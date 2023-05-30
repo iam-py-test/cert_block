@@ -24,14 +24,17 @@ browser.runtime.onMessage.addListener(async function(data){
 
 browser.webRequest.onHeadersReceived.addListener(async function(req){
         try{
-            if(global["block_rules"].length === 0){
-                global["block_rules"] = await getStorage('rules', []);
-            }
             if(global["settings"]["enabled"] === false){
                 return {cancel:false};
             }
             var event_msg = "not filtered";
             var domain = getSafeDomain(req.url);
+            if(global["disabled_domains"].includes(domain)){
+                return {cancel: false};
+            }
+            if(global["block_rules"].length === 0 || typeof global["block_rules"] !== "object"){
+                global["block_rules"] = await getStorage('rules', []);
+            }
             let blocked = false;
             console.log(req);
             if(isHTTPS(req.url)){
@@ -62,12 +65,13 @@ browser.webRequest.onHeadersReceived.addListener(async function(req){
                 browser.runtime.sendMessage({
                     "event": event_msg,
                     "hash": blocked_hash,
-                    "domain":domain
+                    "domain":domain,
+                    "url": req.url
                 });
             }
             catch(err){}
             
-            return {cancel:blocked};
+            return {cancel: blocked};
         }
         catch(err){
             console.error(err);

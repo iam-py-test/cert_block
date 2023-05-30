@@ -1,9 +1,9 @@
 "use strict";
 const logElm = document.getElementById("log");
 
-function logEntry(hash,event,domain){
+function logEntry(hash,event,url){
     let loge = document.createElement("p");
-    loge.textContent = `${event} - ${hash} - ${domain}`;
+    loge.textContent = `${event} - ${hash} - ${url}`;
     if(event === "blocked"){
         loge.style.color = "red";
     }
@@ -18,5 +18,5 @@ browser.runtime.onMessage.addListener(async function(data){
     if(!data.event){
         return;
     }
-    logEntry(data.hash,data.event,data.domain);
+    logEntry(data.hash,data.event, data.url);
 });
