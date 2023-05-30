@@ -1,0 +1,32 @@
+{
+
+    "manifest_version": 2,
+    "name": "Cert Block",
+    "version": "1.1",
+    "author":"iam-py-test",
+    "description": "Block domains based on the hash of their TLS cert",
+    "permissions":[
+      "webNavigation",
+      "tabs",
+      "dns",
+      "webRequest",
+      "webRequestBlocking",
+      "<all_urls>",
+      "storage",
+      "unlimitedStorage"
+    ],
+    "background": {
+      "scripts": [
+        "lib.js",
+        "background.js"
+      ],
+      "persistent": false
+    },
+    "options_ui": {
+        "page": "rules.html",
+        "open_in_tab":true
+    },
+    "browser_action": {
+      "default_popup":"popup.html"
+    }
+  }
